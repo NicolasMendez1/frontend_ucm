@@ -68,14 +68,14 @@ function uploadFile() {
 */
 
 
-function generateUUID() {
-	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-		const r = Math.random() * 16 | 0;
-		const v = c === 'x' ? r : (r & 0x3 | 0x8);
-		return v.toString(16);
-	});
-}
 
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0; // número aleatorio entre 0 y 15
+    const v = c === 'x' ? r : (r & 0x3 | 0x8); // para 'y', asegura que el primer bit sea 8, 9, a o b
+    return v.toString(16);
+  });
+}
 
 async function uploadFile() {
 	const fileName = document.getElementById('fileName').value;
@@ -85,27 +85,19 @@ async function uploadFile() {
 		alert('Por favor completa el nombre del archivo y selecciona un archivo');
 		return;
 	}
-
+	let uuid = generateUUID();
 	const file = fileInput.files[0];
-
-	const response = await handleUpload(file);
-
-	if (!response) return; // Error manejado ya en handleUpload
-
-	const { uuid, url } = response;
-
 	const data = {
 		file_id: uuid,
 		course_id: current_course_id,
 		student_id: localStorage.getItem('username'),
 		filename: fileName,
 		aws_id: uuid,
-		url: `https://sample-loader.s3.us-east-2.amazonaws.com/${uuid}`,
+		url: "https://sample-loader.s3.us-east-2.amazonaws.com/"+uuid,
 		mimetype: file.type,
 		size: file.size,
 		upload_date: new Date().toISOString(),
 	};
-
 	registerFile(data);
 }
 
