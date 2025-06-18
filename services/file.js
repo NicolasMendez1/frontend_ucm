@@ -1,12 +1,16 @@
 async function registerFile(data) {
-	const url = 'http://127.0.0.1:8000/register-file/';
+	const url = 'http://127.0.0.1:8000/files/register/';
 	try {
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: getAuthHeaders(),
 			body: JSON.stringify(data)
 		});
-		if (!response.ok) throw new Error(`Error al registrar archivo: ${response.status}`);
+
+		if (!response.ok) {
+			console.error('Error al crear evaluación:', response.status, responseText);
+			throw new Error(responseText);
+		}
 		return await response.json();
 	} catch (error) {
 		console.error('registerFile error:', error);
@@ -27,7 +31,7 @@ async function getFilesByCourse(course_id) {
 		throw error;
 	}
 }
-
+/*
 async function updateFileName(file_id, newFilename) {
 	const url = `http://127.0.0.1:8000/update-file-name/${file_id}/`;
 	try {
@@ -43,7 +47,7 @@ async function updateFileName(file_id, newFilename) {
 		throw error;
 	}
 }
-
+*/
 async function deleteFile(file_id) {
 	const url = `http://127.0.0.1:8000/delete-file/${file_id}/`;
 	try {

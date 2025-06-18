@@ -256,9 +256,10 @@ async function loadContent() {
 	);
 }
 
-
+let current_course_id = "";
 function openCourseDetail(course) {
 	RenderCourseDetails(course)
+	current_course_id = course.id;
 	openCourseDetailModal()
 }
 

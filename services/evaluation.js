@@ -43,12 +43,19 @@ async function createEvaluation(data) {
 			body: JSON.stringify(data)
 		});
 
-		if (!response.ok) throw new Error(`Error al crear evaluación: ${response.status}`);
-		const result = await response.json();
+		const responseText = await response.text();
+
+		if (!response.ok) {
+			console.error('Error al crear evaluación:', response.status, responseText);
+			throw new Error(responseText);
+		}
+
+		const result = JSON.parse(responseText);
 		console.log('Evaluación creada:', result);
 		return result;
+
 	} catch (error) {
-		console.error(error);
+		console.error('Catch error:', error);
 		throw error;
 	}
 }
@@ -73,7 +80,7 @@ async function updateEvaluation(data) {
 }
 
 async function deleteEvaluationById(evaluation_id) {
-	const url = `http://127.0.0.1:8000/evaluations/${evaluation_id}/`;
+	const url = `http://127.0.0.1:8000/evaluations/delete/${evaluation_id}/`;
 	try {
 		const response = await fetch(url, {
 			method: 'DELETE',

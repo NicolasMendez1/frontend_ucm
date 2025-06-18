@@ -203,7 +203,7 @@ const CalendarManager = {
 			const confirmed = confirm(`¿Estás seguro de que quieres eliminar el evento "${event.evaluation_name}"?`);
 			if (!confirmed) return;
 
-			const success = await ApiService.deleteEvaluation(eventId);
+			const success = await deleteEvaluationById(eventId);
 			if (success) {
 				eventItem.remove();
 			}
@@ -309,89 +309,3 @@ function RenderCourseDetails({name,files,events,grades}) {
 	CalendarManager.render(events);
 	GradeManager.render(grades);
 }
-/*
-const App = {
-	init() {
-		this.bindEvents();
-		const files = [
-			{
-				filename: 'Resumen Capítulo 33.docx',
-				size: '1.2 MB',
-				student_id: 'Juan Pérez',
-				url: '#'
-			},
-			{
-				filename: 'Guía de Ejercicios.pdf',
-				size: '2.5 MB',
-				student_id: 'Dr. Martínez',
-				url: '#'
-			}
-		];
-		const grades = [
-			{
-				evaluation_name: "Evaluación 1",
-				portal_grade: 8.2,
-				lms_grade: null
-			},
-			{
-				evaluation_name: "Evaluación 2",
-				portal_grade: 7.0,
-				lms_grade: 7.0
-			},
-			{
-				evaluation_name: "Evaluación 3",
-				portal_grade: 6.0,
-				lms_grade: 5.0
-			}
-		];
-		const events = [
-			{
-				id: 1,
-				evaluation_name: 'Prueba Diagnóstica',
-				description: 'Primera evaluación del semestre',
-				evaluation_date: '2025-07-02T09:00:00'
-			},
-			{
-				id: 2,
-				evaluation_name: 'Prueba 1',
-				description: 'Incluye unidades 1 y 2',
-				evaluation_date: '2025-08-14T11:00:00'
-			},
-			{
-				id: 3,
-				evaluation_name: 'Examen Parcial',
-				description: 'Evaluación acumulativa',
-				evaluation_date: '2025-09-30T08:30:00'
-			}
-		];
-		TabManager.init();
-		FileManager.render(files);
-		CalendarManager.render(events);
-		GradeManager.render(grades);
-	},
-
-	bindEvents() {
-		document.getElementById('btn-back').addEventListener('click', () => {
-			console.log('Volver a la tarjeta de calificaciones');
-		});
-
-		document.getElementById('btn-add-event').addEventListener('click', () => {
-			console.log('Agregar nuevo evento al calendario');
-		});
-
-		document.getElementById('btn-upload-file').addEventListener('click', () => {
-			console.log('Subir nuevo archivo');
-		});
-
-		document.addEventListener('click', (e) => {
-			if (e.target.closest('.btn-delete')) {
-				const eventId = e.target.closest('.btn-delete').dataset.eventId;
-				CalendarManager.deleteEvent(eventId);
-			}
-		});
-	}
-};
-document.addEventListener('DOMContentLoaded', () => {
-	App.init();
-});
-*/

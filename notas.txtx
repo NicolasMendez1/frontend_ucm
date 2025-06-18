@@ -1,0 +1,51 @@
+INTEGRA ESTAS FUNCIONES
+QUE UPLOAD FILE OBTEGAL LOS DATOS BIEN
+
+async function handleUpload(file) {
+	if (!file) return alert('No se seleccionó ningún archivo.');
+
+	try {
+		alert(`Subiendo archivo: ${file.name}`);
+
+		const presignedResponse = await getPresignedUrl(file.name, file.type);
+
+		const s3Response = await uploadFileToS3(presignedResponse.url, file);
+
+		alert(`Archivo "${file.name}" subido exitosamente!`);
+		
+		return presignedResponse //devuevle uuid y url
+	} catch (error) {
+		console.error("Error en el proceso completo:", error);
+		alert("Error al subir el archivo. Revisa la consola para más detalles.");
+	}
+}
+
+
+async function uploadFile() {
+	const fileName = document.getElementById('fileName').value;
+	const fileInput = document.getElementById('fileUpload');
+
+	if (!fileName || !fileInput.files.length) {
+		alert('Por favor completa el nombre del archivo y selecciona un archivo');
+		return;
+	}
+
+	const file = fileInput.files[0];
+
+	let UUID = await handleUpload(file);
+
+	const data = {
+		file_id: //EL UUID DEVUELTA,
+		course_id: current_course_id,
+		student_id: localStorage.getItem('username'),
+		filename: fileName,
+		aws_id: //EL UUID DEVUELTA,
+		url: "https://sample-loader.s3.us-east-2.amazonaws.com/" + UUID DEVUELTO,
+		mimetype: file.type,
+		size: file.size,
+		upload_date: new Date().toISOString(),
+	};
+	registerFile(data);
+}
+
+

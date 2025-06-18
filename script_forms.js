@@ -44,19 +44,7 @@ document.getElementById('fileModal').addEventListener('click', function (e) {
 	}
 });
 
-function uploadEvent() {
-	const title = document.getElementById('eventTitle').value;
-	const date = document.getElementById('eventDate').value;
-	const description = document.getElementById('eventDescription').value;
-
-	if (!title || !date) {
-		alert('Por favor completa el título y la fecha del evento');
-		return;
-	}
-
-	closeModal('event');
-}
-
+/*
 function uploadFile() {
 	const fileName = document.getElementById('fileName').value;
 	const fileInput = document.getElementById('fileUpload');
@@ -76,6 +64,72 @@ function uploadFile() {
 	});
 
 	closeModal('file');
+}
+*/
+
+
+function generateUUID() {
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		const r = Math.random() * 16 | 0;
+		const v = c === 'x' ? r : (r & 0x3 | 0x8);
+		return v.toString(16);
+	});
+}
+
+
+async function uploadFile() {
+	const fileName = document.getElementById('fileName').value;
+	const fileInput = document.getElementById('fileUpload');
+
+	if (!fileName || !fileInput.files.length) {
+		alert('Por favor completa el nombre del archivo y selecciona un archivo');
+		return;
+	}
+
+	const file = fileInput.files[0];
+
+	const response = await handleUpload(file);
+
+	if (!response) return; // Error manejado ya en handleUpload
+
+	const { uuid, url } = response;
+
+	const data = {
+		file_id: uuid,
+		course_id: current_course_id,
+		student_id: localStorage.getItem('username'),
+		filename: fileName,
+		aws_id: uuid,
+		url: `https://sample-loader.s3.us-east-2.amazonaws.com/${uuid}`,
+		mimetype: file.type,
+		size: file.size,
+		upload_date: new Date().toISOString(),
+	};
+
+	registerFile(data);
+}
+
+
+function uploadEvent() {
+	const evaluation_name = document.getElementById('eventTitle').value;
+	const evaluation_date = document.getElementById('eventDate').value;
+	const description = document.getElementById('eventDescription').value;
+
+	const eventData = {
+		student_id: localStorage.getItem('username'),
+		course_id: current_course_id,
+		evaluation_name: evaluation_name,
+		evaluation_date: evaluation_date,
+		description: description
+	};
+
+	if (!evaluation_name || !evaluation_date) {
+		alert('Por favor completa el título y la fecha del evento');
+		return;
+	}
+
+	console.log('Datos del evento:', JSON.stringify(eventData, null, 2));
+	createEvaluation(eventData);
 }
 
 function updateFileName() {
